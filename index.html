@@ -1,0 +1,1994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>gasmine-puvvu🌸 2.8.0 Assessment &amp; AI Spec Studio</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #1e293b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #475569;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+    /* Simulated gasmine-puvvu🌸 2.8.0 Reporter Styling */
+    .gasmine-sim-banner {
+      background: linear-gradient(90deg, #ec4899 0%, #8b5cf6 50%, #06b6d4 100%);
+      color: #ffffff;
+      padding: 10px 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 6px 6px 0 0;
+    }
+    .gasmine-sim-bar-passed {
+      background-color: #007069;
+      color: #ffffff;
+      padding: 6px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .gasmine-sim-bar-failed {
+      background-color: #ca3a11;
+      color: #ffffff;
+      padding: 6px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Navigation Header -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 via-fuchsia-600 to-cyan-500 flex items-center justify-center font-bold text-lg text-white shadow-md">
+          🌸
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base sm:text-lg font-bold tracking-tight text-white">gasmine-puvvu🌸 2.8.0 AI Spec Studio</h1>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/30 font-medium">gasmine-puvvu🌸 Engine</span>
+          </div>
+          <p class="text-xs text-slate-400">Type any coding question &mdash; generate checklists, <code class="text-cyan-300">src/app.js</code>, and <code class="text-pink-300">FunctionsTest.js</code> via Gemini, Groq, or OpenRouter AI</p>
+        </div>
+      </div>
+
+      <!-- Preset Selector, Mode Selector & Quick Actions -->
+      <div class="flex flex-wrap items-center gap-2.5">
+        <div class="flex items-center gap-1.5">
+          <label for="preset-select" class="text-xs text-slate-400 font-medium">Spec Set:</label>
+          <select id="preset-select" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-pink-500">
+            <option value="task_tracker">1: Task Tracker (Your 10 Uploaded Specs)</option>
+            <option value="task_tracker_5">2: Task Tracker (5 Core Specs)</option>
+          </select>
+        </div>
+
+        <div class="flex items-center bg-slate-800 p-0.5 rounded-lg border border-slate-700" role="group" aria-label="Difficulty Mode">
+          <button id="btn-mode-normal" type="button" class="px-2.5 py-1 text-xs font-semibold rounded-md bg-pink-600 text-white transition">
+            Normal Mode
+          </button>
+          <button id="btn-mode-hard" type="button" class="px-2.5 py-1 text-xs font-semibold rounded-md text-slate-300 hover:text-white transition">
+            Hard Mode 🔥
+          </button>
+        </div>
+
+        <button id="btn-toggle-api-drawer" type="button" class="bg-slate-800 hover:bg-slate-700 text-pink-300 border border-pink-500/30 font-semibold text-xs px-3 py-1.5 rounded-lg transition">
+          &#9881; AI API Keys
+        </button>
+      </div>
+    </div>
+
+    <!-- Collapsible AI API Key Configuration Bar (Gemini, Groq & OpenRouter) -->
+    <div id="api-config-bar" class="border-t border-slate-800 bg-slate-950/90 px-4 py-3">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+        <div class="md:col-span-3">
+          <label for="ai-provider-select" class="block text-[11px] font-semibold text-pink-300 mb-1">AI Provider</label>
+          <select id="ai-provider-select" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-pink-500">
+            <option value="gemini">Google Gemini API (gemini-2.5-flash)</option>
+            <option value="groq">Groq Cloud (llama-3.3-70b-versatile)</option>
+            <option value="openrouter">OpenRouter (openai/gpt-4o-mini or any model)</option>
+          </select>
+        </div>
+        <div class="md:col-span-3">
+          <label for="ai-model-input" class="block text-[11px] font-semibold text-slate-300 mb-1">Model ID</label>
+          <input id="ai-model-input" type="text" value="gemini-2.5-flash" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 mono focus:outline-none focus:border-pink-500" placeholder="e.g. gemini-2.5-flash">
+        </div>
+        <div class="md:col-span-4">
+          <label for="ai-api-key-input" class="block text-[11px] font-semibold text-slate-300 mb-1">API Key (<span id="api-key-hint" class="text-cyan-300">AIza... Gemini | gsk_... Groq | sk-or-... OpenRouter</span>)</label>
+          <input id="ai-api-key-input" type="password" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 mono focus:outline-none focus:border-pink-500" placeholder="Paste your Gemini, Groq, or OpenRouter API Key...">
+        </div>
+        <div class="md:col-span-2 flex items-center gap-2">
+          <button id="btn-save-key" type="button" class="w-full bg-pink-600 hover:bg-pink-500 text-white font-semibold text-xs px-3 py-1.5 rounded-lg transition shadow">
+            Save Key
+          </button>
+        </div>
+      </div>
+      <div class="max-w-7xl mx-auto mt-1.5 flex flex-wrap items-center justify-between text-[11px] text-slate-400">
+        <span id="ai-status-indicator">Status: Ready &mdash; Paste your Gemini, Groq, or OpenRouter key above to enable 1-click AI spec &amp; checklist generation.</span>
+        <div class="flex flex-wrap items-center gap-3">
+          <button id="btn-preset-gemini-model" type="button" class="text-emerald-400 hover:underline">Use Gemini 2.5 Flash</button>
+          <button id="btn-preset-groq-model" type="button" class="text-cyan-400 hover:underline">Use Groq llama-3.3-70b</button>
+          <button id="btn-preset-or-model" type="button" class="text-pink-400 hover:underline">Use OpenRouter gpt-4o-mini</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-4 flex flex-col gap-4">
+
+    <!-- Top Compact Question / Prompt Generator Bar -->
+    <section class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 shadow-lg">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-pink-400"></span>
+          <h2 class="text-xs sm:text-sm font-semibold text-white">1. Drop Any Coding Question or Topic</h2>
+          <span class="text-[11px] text-slate-400 hidden sm:inline">&mdash; Generates To-Do Checklist, <code class="text-cyan-300">README.md</code>, <code class="text-cyan-300">src/app.js</code> &amp; <code class="text-pink-300">FunctionsTest.js</code></span>
+        </div>
+        <div class="flex items-center gap-2">
+          <label for="suite-title-input" class="text-xs text-slate-400">Suite Title:</label>
+          <input id="suite-title-input" type="text" value="Assessment - Task Tracker Utilities" class="bg-slate-950 border border-slate-800 rounded px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-pink-500 w-48 sm:w-64">
+          <button id="btn-clear-prompt" type="button" class="text-xs text-slate-400 hover:text-slate-200 px-2 py-0.5 rounded bg-slate-800">Clear</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch">
+        <div class="lg:col-span-9">
+          <textarea id="prompt-input" rows="3" class="w-full h-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 mono focus:outline-none focus:border-pink-500 resize-y" placeholder="Type any coding problem or function list here..."></textarea>
+        </div>
+        <div class="lg:col-span-3 flex flex-col justify-between gap-2">
+          <button id="btn-ai-generate" type="button" class="w-full bg-gradient-to-r from-pink-600 via-fuchsia-600 to-cyan-500 hover:from-pink-500 hover:to-cyan-400 text-white text-xs font-semibold px-3 py-2 rounded-lg transition shadow flex items-center justify-center gap-1.5">
+            <span>🌸</span> <span>AI Generate Specs &amp; Todos</span>
+          </button>
+          <button id="btn-analyze" type="button" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium px-3 py-1.5 rounded-lg transition">
+            Offline Parse Prompt
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Primary IDE Workspace: Left Sidebar Explorer + Split View (Code Writer + Right Pane) -->
+    <section class="bg-slate-900 border border-slate-800 rounded-xl shadow-lg flex-1 flex flex-col md:flex-row overflow-hidden min-h-[540px]">
+
+      <!-- ONE-COLUMN VERTICAL SIDEBAR -->
+      <aside class="w-full md:w-56 border-b md:border-b-0 md:border-r border-slate-800 bg-slate-950/90 p-3 flex flex-col justify-between shrink-0">
+        <div>
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2.5 px-2 flex items-center justify-between">
+            <span>Project Explorer</span>
+            <span id="active-mode-pill" class="text-[10px] px-1.5 py-0.5 rounded bg-pink-500/20 text-pink-300 border border-pink-500/30">NORMAL</span>
+          </div>
+
+          <!-- Single Column Navigation List -->
+          <div class="flex flex-col gap-1" role="tablist">
+            <button type="button" data-tab="runner" class="tab-btn w-full text-left px-3 py-2 text-xs font-semibold rounded-lg border-l-2 border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/50 transition flex items-center gap-2">
+              <span>🌸</span> <span>gasmine-puvvu🌸 Runner</span>
+            </button>
+            <button type="button" data-tab="specs" class="tab-btn w-full text-left px-3 py-2 text-xs font-semibold rounded-lg border-l-2 border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/50 transition mono">
+              tests/FunctionsTest.js
+            </button>
+            <button type="button" data-tab="appjs" class="tab-btn w-full text-left px-3 py-2 text-xs font-semibold rounded-lg border-l-2 border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/50 transition mono">
+              src/app.js
+            </button>
+            <button type="button" data-tab="readme" class="tab-btn w-full text-left px-3 py-2 text-xs font-semibold rounded-lg border-l-2 border-pink-400 text-pink-300 bg-slate-900 transition mono">
+              README.md
+            </button>
+            <button type="button" data-tab="indexhtml" class="tab-btn w-full text-left px-3 py-2 text-xs font-semibold rounded-lg border-l-2 border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/50 transition mono">
+              index.html
+            </button>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800 flex flex-col gap-1.5">
+          <div class="text-[10px] text-slate-500 px-1 mb-0.5">
+            Default: <span class="text-cyan-300">Code Writer</span> + <span class="text-emerald-300">README.md</span><br>
+            On Run: <span class="text-cyan-300">Code Writer</span> + <span class="text-pink-300">Spec Runner</span>
+          </div>
+          <button id="btn-copy-active" type="button" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-2.5 py-1.5 rounded border border-slate-700 transition">
+            Copy Current File
+          </button>
+          <button id="btn-download-active" type="button" class="w-full bg-pink-600/20 hover:bg-pink-600/30 text-pink-300 border border-pink-500/30 text-xs px-2.5 py-1.5 rounded transition">
+            Download File
+          </button>
+        </div>
+      </aside>
+
+      <!-- SIDE-BY-SIDE WORKSPACE: Left = Code Writer (Always Visible), Right = Active Companion View -->
+      <div class="flex-1 grid grid-cols-1 xl:grid-cols-2 divide-y xl:divide-y-0 xl:divide-x divide-slate-800 overflow-hidden">
+
+        <!-- LEFT PANE: Persistent Code Writer (src/app.js) -->
+        <div class="p-4 flex flex-col bg-slate-900/60">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+              <label for="live-code-editor" class="text-xs font-bold text-cyan-300 mono">Code Writer — src/app.js</label>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button id="btn-load-uploaded-code" type="button" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded border border-slate-700 transition">
+                Load Uploaded app.js
+              </button>
+              <button id="btn-reset-starter" type="button" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded border border-slate-700 transition">
+                Reset Starter Stubs
+              </button>
+            </div>
+          </div>
+
+          <textarea id="live-code-editor" rows="20" class="w-full flex-1 bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs text-emerald-300 mono focus:outline-none focus:border-pink-500 resize-y leading-relaxed min-h-[380px]" spellcheck="false"></textarea>
+
+          <div class="mt-3 flex flex-wrap items-center justify-between gap-2">
+            <span class="text-[11px] text-slate-400">Click <strong>Run Specs</strong> to open <code class="text-pink-300">gasmine-puvvu🌸 Runner</code> side-by-side</span>
+            <button id="btn-run-specs" type="button" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-lg shadow transition flex items-center gap-1.5">
+              <span>&#9654;</span> <span>Run gasmine-puvvu🌸 Specs</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT PANE: Dynamic Companion View (Defaults to README.md; switches to Spec Runner on Run Specs) -->
+        <div class="p-4 flex flex-col overflow-hidden bg-slate-900/30">
+
+          <!-- PANEL A: README.md (VISIBLE BY DEFAULT SIDE-BY-SIDE WITH CODE WRITER) -->
+          <div id="tab-panel-readme" class="tab-panel flex-1 flex flex-col">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span class="text-xs font-bold text-emerald-300 mono">README.md (Problem Statement &amp; Tasks)</span>
+              </div>
+              <span class="text-[11px] text-slate-400">Default Side-by-Side View</span>
+            </div>
+            <textarea id="generated-readme-code" rows="20" class="w-full flex-1 bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs text-slate-200 mono focus:outline-none focus:border-pink-500 leading-relaxed min-h-[380px]" readonly></textarea>
+          </div>
+
+          <!-- PANEL B: gasmine-puvvu🌸 SPEC RUNNER + COMPACT SPEC LIST "2" INSIDE IT (OPENS WHEN RUN SPECS IS CLICKED) -->
+          <div id="tab-panel-runner" class="tab-panel hidden flex-1 flex flex-col gap-3 overflow-hidden">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="text-sm">🌸</span>
+                <span class="text-xs font-bold text-pink-300">gasmine-puvvu🌸 2.8.0 Spec Runner</span>
+              </div>
+              <span id="runner-score-pill" class="text-xs font-bold px-2.5 py-0.5 rounded bg-slate-800 text-pink-300 border border-pink-500/30 mono">Score: 0 / 20</span>
+            </div>
+
+            <!-- COMPACT SPEC LIST "2" EMBEDDED INSIDE SPEC RUNNER -->
+            <div class="bg-slate-950/90 border border-slate-800 rounded-lg p-2.5">
+              <div class="flex items-center justify-between mb-1.5">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  <span class="text-[11px] font-semibold text-white">2. Spec Checklist (Compact Runner View)</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span id="checklist-progress-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                    0 / 10 Green
+                  </span>
+                  <button id="btn-toggle-add-spec" type="button" class="text-[10px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-pink-300 border border-pink-500/30 transition">
+                    + Custom Spec
+                  </button>
+                </div>
+              </div>
+
+              <!-- Mini Progress Bar -->
+              <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden mb-2">
+                <div id="checklist-progress-bar" class="h-full bg-gradient-to-r from-pink-500 via-fuchsia-500 to-emerald-400 transition-all duration-300" style="width: 0%"></div>
+              </div>
+
+              <!-- Collapsible Mini Form to Add a Custom Spec -->
+              <div id="add-spec-drawer" class="hidden bg-slate-900 border border-slate-800 rounded p-2 mb-2">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mb-1.5">
+                  <input id="new-fn-sig" type="text" placeholder="Signature e.g. double(n)" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-[11px] text-slate-200 mono">
+                  <select id="new-fn-concept" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-[11px] text-slate-200">
+                    <option value="template literals">template literals</option>
+                    <option value="comparison / conditionals">comparison / conditionals</option>
+                    <option value="loops / reduce">loops / reduce</option>
+                    <option value="array filter (no mutation)">array filter (no mutation)</option>
+                    <option value="array map + objects">array map + objects</option>
+                    <option value="objects + spread clone">objects + spread clone</option>
+                    <option value="edge-case handling">edge-case handling</option>
+                  </select>
+                </div>
+                <input id="new-fn-desc" type="text" placeholder="Requirement e.g. returns n * 2" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-[11px] text-slate-200 mb-1.5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mb-1.5">
+                  <input id="new-fn-call" type="text" placeholder="Call e.g. double(5)" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-[11px] text-slate-200 mono">
+                  <input id="new-fn-expect" type="text" placeholder="Expected e.g. 10" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-[11px] text-slate-200 mono">
+                </div>
+                <div class="flex items-center justify-between">
+                  <label class="flex items-center gap-1 text-[10px] text-slate-400 cursor-pointer">
+                    <input id="new-fn-immutable" type="checkbox" class="rounded bg-slate-950 border-slate-700 text-pink-500">
+                    No mutation
+                  </label>
+                  <button id="btn-add-spec" type="button" class="bg-pink-600 hover:bg-pink-500 text-white text-[10px] font-semibold px-2.5 py-1 rounded">
+                    Add Spec
+                  </button>
+                </div>
+              </div>
+
+              <!-- Compact Horizontal/Scrollable Spec Checklist Pills -->
+              <div id="checklist-container" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-32 overflow-y-auto pr-1"></div>
+            </div>
+
+            <!-- Simulated gasmine-puvvu🌸 2.8.0 HTML Reporter Output -->
+            <div class="bg-slate-100 text-slate-900 rounded-lg overflow-hidden border border-slate-700 flex-1 flex flex-col min-h-[250px]">
+              <div class="px-3 py-1.5 bg-slate-200 border-b border-slate-300 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-pink-700 text-xs tracking-tight">gasmine-puvvu🌸</span>
+                  <span class="text-[10px] text-slate-500 mono">2.8.0</span>
+                </div>
+                <span id="gasmine-duration-text" class="text-[10px] text-slate-600 mono">finished in 0.002s</span>
+              </div>
+
+              <div id="gasmine-dots-bar" class="px-3 py-1 bg-slate-100 flex flex-wrap items-center gap-1 border-b border-slate-200 min-h-[24px]"></div>
+
+              <div class="gasmine-sim-banner rounded-none py-1.5 px-3">
+                <span class="text-xs font-semibold">gasmine-puvvu🌸 — Spec Runner</span>
+                <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded">Auto-Synced</span>
+              </div>
+
+              <div id="gasmine-status-bar" class="gasmine-sim-bar-failed">
+                10 specs, 10 failures
+              </div>
+
+              <div id="gasmine-results-list" class="p-2.5 overflow-y-auto max-h-56 space-y-1.5 text-xs mono flex-1 bg-white"></div>
+            </div>
+          </div>
+
+          <!-- PANEL C: GENERATED tests/FunctionsTest.js -->
+          <div id="tab-panel-specs" class="tab-panel hidden flex-1 flex flex-col">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-pink-300 mono">tests/FunctionsTest.js</span>
+              <button id="btn-apply-spec-edits" type="button" class="text-xs bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 border border-pink-500/30 px-2.5 py-1 rounded transition">
+                Update Specs &amp; Run
+              </button>
+            </div>
+            <textarea id="generated-specs-code" rows="20" class="w-full flex-1 bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs text-pink-200 mono focus:outline-none focus:border-pink-500 leading-relaxed min-h-[380px]" spellcheck="false"></textarea>
+          </div>
+
+          <!-- PANEL D: GENERATED src/app.js STARTER -->
+          <div id="tab-panel-appjs" class="tab-panel hidden flex-1 flex flex-col">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-cyan-300 mono">src/app.js (Clean Starter Reference)</span>
+            </div>
+            <textarea id="generated-app-code" rows="20" class="w-full flex-1 bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs text-cyan-200 mono focus:outline-none focus:border-pink-500 leading-relaxed min-h-[380px]" readonly></textarea>
+          </div>
+
+          <!-- PANEL E: GENERATED index.html -->
+          <div id="tab-panel-indexhtml" class="tab-panel hidden flex-1 flex flex-col">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-amber-300 mono">index.html (gasmine-puvvu🌸 Runner Page)</span>
+            </div>
+            <textarea id="generated-index-code" rows="20" class="w-full flex-1 bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs text-amber-200 mono focus:outline-none focus:border-pink-500 leading-relaxed min-h-[380px]" readonly></textarea>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast-banner" class="fixed bottom-4 right-4 bg-slate-800 border border-pink-500/40 text-slate-100 text-xs px-4 py-2.5 rounded-lg shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-50">
+    Copied to clipboard!
+  </div>
+
+  <script>
+    /* =========================================================================
+     * PRESET ASSESSMENT TEMPLATES (Rebranded to gasmine-puvvu🌸)
+     * ========================================================================= */
+    var PRESETS = {
+      task_tracker: {
+        suiteTitle: "Assessment - Task Tracker Utilities",
+        promptText: [
+          "1. greet(name) -> a template-literal greeting: greet(\"Aisha\") -> \"Hi, Aisha! Welcome back.\"",
+          "2. isPassing(score) -> true when score >= 40, else false",
+          "3. sumScores(scores) -> sum of the number array; [] -> 0",
+          "4. highScores(scores, min) -> a new array of scores strictly > min (original untouched)",
+          "5. titles(tasks) -> array of every task's .title, in order",
+          "6. countByStatus(tasks, status) -> how many tasks have that .status",
+          "7. toggleDone(task) -> a new object with .done flipped — original not mutated",
+          "8. longestTitle(tasks) -> the .title string with the most characters",
+          "9. averageScore(scores) -> the average; [] -> 0 (no divide-by-zero)",
+          "10. formatTask(task) -> template-literal line: \"[x] Ship (low)\" / \"[ ] Buy milk (high)\""
+        ].join("\n"),
+        uploadedAppJs: [
+          "// Your uploaded src/app.js (tested with gasmine-puvvu🌸)",
+          "function greet(name) {",
+          "  return `Hi, ${name}! Welcome back.`;",
+          "}",
+          "",
+          "function isPassing(score) {",
+          "  return score >= 40;",
+          "}",
+          "",
+          "function sumScores(scores) {",
+          "  let total = 0;",
+          "  for (let score of scores) {",
+          "    total += score;",
+          "  }",
+          "  return total;",
+          "}",
+          "",
+          "function highScores(scores, min) {",
+          "  // Note: Your uploaded app.js had 2 bugs here: pushed `scores` instead of `score`, and typo `filteresScores`",
+          "  let filteredScores = [];",
+          "  for (let score of scores) {",
+          "    if (score > min) {",
+          "      filteredScores.push(scores);",
+          "    }",
+          "  }",
+          "  return filteresScores;",
+          "}",
+          "",
+          "function titles(tasks) {",
+          "  let allTitles = [];",
+          "  for (let task of tasks) {",
+          "    allTitles.push(task.title);",
+          "  }",
+          "  return allTitles;",
+          "}",
+          "",
+          "function countByStatus(tasks, status) {",
+          "  let count = 0;",
+          "  for (let task of tasks) {",
+          "    if (task.status === status) {",
+          "      count++;",
+          "    }",
+          "  }",
+          "  return count;",
+          "}",
+          "",
+          "function toggleDone(task) {",
+          "  let newTask = Object.assign({}, task);",
+          "  newTask.done = !task.done;",
+          "  return newTask;",
+          "}",
+          "",
+          "function longestTitle(tasks) {",
+          "  // Write logic to return longest task title",
+          "}",
+          "",
+          "function averageScore(scores) {",
+          "  // Write logic to guard empty array and return average",
+          "}",
+          "",
+          "function formatTask(task) {",
+          "  // Write logic to format '[x] Title (priority)'",
+          "}"
+        ].join("\n"),
+        tasks: [
+          {
+            id: "t1",
+            name: "greet",
+            params: "name",
+            desc: "returns a template-literal greeting: \"Hi, Aisha! Welcome back.\"",
+            concept: "template literals",
+            marks: 2,
+            done: false,
+            immutable: false,
+            assertions: [
+              'expect(greet("Aisha")).toBe("Hi, Aisha! Welcome back.");',
+              'expect(greet("Ravi")).toBe("Hi, Ravi! Welcome back.");'
+            ]
+          },
+          {
+            id: "t2",
+            name: "isPassing",
+            params: "score",
+            desc: "is true only for scores >= 40",
+            concept: "comparison operators / conditionals",
+            marks: 2,
+            done: false,
+            immutable: false,
+            assertions: [
+              "expect(isPassing(40)).toBe(true);",
+              "expect(isPassing(95)).toBe(true);",
+              "expect(isPassing(39)).toBe(false);",
+              "expect(isPassing(0)).toBe(false);"
+            ]
+          },
+          {
+            id: "t3",
+            name: "sumScores",
+            params: "scores",
+            desc: "adds up the array (0 when empty)",
+            concept: "loops / reduce",
+            marks: 2,
+            done: false,
+            immutable: false,
+            assertions: [
+              "expect(sumScores([10, 20, 30])).toBe(60);",
+              "expect(sumScores([5])).toBe(5);",
+              "expect(sumScores([])).toBe(0);"
+            ]
+          },
+          {
+            id: "t4",
+            name: "highScores",
+            params: "scores, min",
+            desc: "keeps only scores above min without mutating input",
+            concept: "array filter",
+            marks: 2,
+            done: false,
+            immutable: true,
+            assertions: [
+              "expect(highScores([10, 50, 90], 40)).toEqual([50, 90]);",
+              "expect(highScores([10, 20], 40)).toEqual([]);",
+              "var src = [10, 50, 90];",
+              "highScores(src, 40);",
+              "expect(src).toEqual([10, 50, 90]);"
+            ]
+          },
+          {
+            id: "t5",
+            name: "titles",
+            params: "tasks",
+            desc: "maps each task to its title",
+            concept: "array map + objects",
+            marks: 2,
+            done: false,
+            immutable: false,
+            assertions: [
+              'expect(titles(tasks())).toEqual(["Buy milk", "Write the essay", "Ship"]);',
+              "expect(titles([])).toEqual([]);"
+            ]
+          },
+          {
+            id: "t6",
+            name: "countByStatus",
+            params: "tasks, status",
+            desc: "counts matching tasks",
+            concept: "filter/loop + objects",
+            marks: 2,
+            done: false,
+            immutable: false,
+            assertions: [
+              'expect(countByStatus(tasks(), "todo")).toBe(2);',
+              'expect(countByStatus(tasks(), "done")).toBe(1);',
+              'expect(countByStatus(tasks(), "archived")).toBe(0);'
+            ]
+          },
+          {
+            id: "t7",
+            name: "toggleDone",
+            params: "task",
+            desc: "returns a NEW object with done flipped",
+            concept: "objects + spread",
+            marks: 2,
+            done: false,
+            immutable: true,
+            assertions: [
+              'var t = { title: "Buy milk", done: false, priority: "high" };',
+              "var out = toggleDone(t);",
+              "expect(out.done).toBe(true);",
+              'expect(out.title).toBe("Buy milk");',
+              'expect(out.priority).toBe("high");',
+              "expect(t.done).toBe(false);",
+              "expect(out).not.toBe(t);"
+            ]
+          },
+          {
+            id: "t8",
+            name: "longestTitle",
+            params: "tasks",
+            desc: "returns the longest title string",
+            concept: "loops + comparison",
+            marks: 2,
+            done: false,
+            immutable: false,
+            assertions: [
+              'expect(longestTitle(tasks())).toBe("Write the essay");',
+              'expect(longestTitle([{ title: "Only one" }])).toBe("Only one");'
+            ]
+          },
+          {
+            id: "t9",
+            name: "averageScore",
+            params: "scores",
+            desc: "averages (0 for empty array)",
+            concept: "edge-case handling",
+            marks: 2,
+            done: false,
+            immutable: false,
+            assertions: [
+              "expect(averageScore([10, 20, 30])).toBe(20);",
+              "expect(averageScore([4, 5])).toBe(4.5);",
+              "expect(averageScore([])).toBe(0);"
+            ]
+          },
+          {
+            id: "t10",
+            name: "formatTask",
+            params: "task",
+            desc: "builds a template-literal display line",
+            concept: "template literals + conditional",
+            marks: 2,
+            done: false,
+            immutable: false,
+            assertions: [
+              'expect(formatTask({ title: "Ship", done: true, priority: "low" })).toBe("[x] Ship (low)");',
+              'expect(formatTask({ title: "Buy milk", done: false, priority: "high" })).toBe("[ ] Buy milk (high)");'
+            ]
+          }
+        ]
+      },
+
+      task_tracker_5: {
+        suiteTitle: "Assessment - Task Tracker Utilities (5 Specs)",
+        promptText: [
+          "1. greet(name) -> a template-literal greeting: greet(\"Aisha\") -> \"Hi, Aisha! Welcome back.\"",
+          "2. isPassing(score) -> true when score >= 40, else false",
+          "3. sumScores(scores) -> sum of the number array; [] -> 0",
+          "4. highScores(scores, min) -> a new array of scores strictly > min (original untouched)",
+          "5. titles(tasks) -> array of every task's .title, in order"
+        ].join("\n"),
+        uploadedAppJs: [
+          "// Your uploaded src/app.js (5-Spec Mode)",
+          "function greet(name) {",
+          "  return `Hi, ${name}! Welcome back.`;",
+          "}",
+          "",
+          "function isPassing(score) {",
+          "  return score >= 40;",
+          "}",
+          "",
+          "function sumScores(scores) {",
+          "  let total = 0;",
+          "  for (let score of scores) {",
+          "    total += score;",
+          "  }",
+          "  return total;",
+          "}",
+          "",
+          "function highScores(scores, min) {",
+          "  let filteredScores = [];",
+          "  for (let score of scores) {",
+          "    if (score > min) {",
+          "      filteredScores.push(scores);",
+          "    }",
+          "  }",
+          "  return filteresScores;",
+          "}",
+          "",
+          "function titles(tasks) {",
+          "  let allTitles = [];",
+          "  for (let task of tasks) {",
+          "    allTitles.push(task.title);",
+          "  }",
+          "  return allTitles;",
+          "}"
+        ].join("\n"),
+        tasks: [
+          {
+            id: "t5_1",
+            name: "greet",
+            params: "name",
+            desc: "returns a template-literal greeting: \"Hi, Aisha! Welcome back.\"",
+            concept: "template literals",
+            marks: 2,
+            done: false,
+            immutable: false,
+            assertions: [
+              'expect(greet("Aisha")).toBe("Hi, Aisha! Welcome back.");',
+              'expect(greet("Ravi")).toBe("Hi, Ravi! Welcome back.");'
+            ]
+          },
+          {
+            id: "t5_2",
+            name: "isPassing",
+            params: "score",
+            desc: "is true only for scores >= 40",
+            concept: "comparison operators / conditionals",
+            marks: 2,
+            done: false,
+            immutable: false,
+            assertions: [
+              "expect(isPassing(40)).toBe(true);",
+              "expect(isPassing(95)).toBe(true);",
+              "expect(isPassing(39)).toBe(false);",
+              "expect(isPassing(0)).toBe(false);"
+            ]
+          },
+          {
+            id: "t5_3",
+            name: "sumScores",
+            params: "scores",
+            desc: "adds up the array (0 when empty)",
+            concept: "loops / reduce",
+            marks: 2,
+            done: false,
+            immutable: false,
+            assertions: [
+              "expect(sumScores([10, 20, 30])).toBe(60);",
+              "expect(sumScores([5])).toBe(5);",
+              "expect(sumScores([])).toBe(0);"
+            ]
+          },
+          {
+            id: "t5_4",
+            name: "highScores",
+            params: "scores, min",
+            desc: "keeps only scores above min without mutating input",
+            concept: "array filter",
+            marks: 2,
+            done: false,
+            immutable: true,
+            assertions: [
+              "expect(highScores([10, 50, 90], 40)).toEqual([50, 90]);",
+              "expect(highScores([10, 20], 40)).toEqual([]);",
+              "var src = [10, 50, 90];",
+              "highScores(src, 40);",
+              "expect(src).toEqual([10, 50, 90]);"
+            ]
+          },
+          {
+            id: "t5_5",
+            name: "titles",
+            params: "tasks",
+            desc: "maps each task to its title",
+            concept: "array map + objects",
+            marks: 2,
+            done: false,
+            immutable: false,
+            assertions: [
+              'expect(titles(tasks())).toEqual(["Buy milk", "Write the essay", "Ship"]);',
+              "expect(titles([])).toEqual([]);"
+            ]
+          }
+        ]
+      }
+    };
+
+    /* =========================================================================
+     * APPLICATION STATE
+     * ========================================================================= */
+    var state = {
+      suiteTitle: PRESETS.task_tracker.suiteTitle,
+      tasks: JSON.parse(JSON.stringify(PRESETS.task_tracker.tasks)),
+      activeTab: "readme",
+      difficultyMode: "normal",
+      provider: "groq",
+      model: "llama-3.3-70b-versatile",
+      apiKey: ""
+    };
+
+    /* =========================================================================
+     * AI API GENERATOR (GEMINI, GROQ & OPENROUTER + NORMAL/HARD MODE)
+     * ========================================================================= */
+    async function generateSpecsViaAI(promptText, suiteTitle) {
+      var apiKey = document.getElementById("ai-api-key-input").value.trim() || state.apiKey;
+      var provider = document.getElementById("ai-provider-select").value;
+      var model = document.getElementById("ai-model-input").value.trim();
+
+      if (!apiKey) {
+        showToast("Please paste your Gemini, Groq, or OpenRouter API key in the top bar first!");
+        document.getElementById("ai-api-key-input").focus();
+        return;
+      }
+
+      // Auto-detect provider from key prefix if needed (AIza = Gemini, gsk_ = Groq, sk-or- = OpenRouter)
+      if (apiKey.indexOf("AIza") === 0 && provider !== "gemini") {
+        provider = "gemini";
+        document.getElementById("ai-provider-select").value = "gemini";
+        model = "gemini-2.5-flash";
+        document.getElementById("ai-model-input").value = model;
+      } else if (apiKey.indexOf("gsk_") === 0 && provider !== "groq") {
+        provider = "groq";
+        document.getElementById("ai-provider-select").value = "groq";
+        if (model.indexOf("/") !== -1 || model.indexOf("gemini") === 0) {
+          model = "llama-3.3-70b-versatile";
+          document.getElementById("ai-model-input").value = model;
+        }
+      } else if (apiKey.indexOf("sk-or-") === 0 && provider !== "openrouter") {
+        provider = "openrouter";
+        document.getElementById("ai-provider-select").value = "openrouter";
+        if (model === "llama-3.3-70b-versatile" || model.indexOf("gemini") === 0) {
+          model = "openai/gpt-4o-mini";
+          document.getElementById("ai-model-input").value = model;
+        }
+      }
+
+      var isHard = state.difficultyMode === "hard";
+      var marksPerSpec = isHard ? 4 : 2;
+      var modeInstruction = isHard
+        ? "DIFFICULTY MODE: HARD 🔥 (4 marks per spec). Generate 4 to 6 rigorous assertions per function covering normal inputs, boundary values, empty/nullish edge cases, negative/zero numbers, and strict input non-mutation checks."
+        : "DIFFICULTY MODE: NORMAL (2 marks per spec). Generate 2 to 3 clear assertions per function covering standard inputs and basic edge cases.";
+
+      var statusEl = document.getElementById("ai-status-indicator");
+      var btnAi = document.getElementById("btn-ai-generate");
+      var originalBtnHtml = btnAi.innerHTML;
+      btnAi.disabled = true;
+      btnAi.innerHTML = '<span>⏳</span> Generating (' + state.difficultyMode.toUpperCase() + ')...';
+      statusEl.textContent = "Calling " + provider.toUpperCase() + " (" + model + ") in " + state.difficultyMode.toUpperCase() + " mode...";
+
+      var systemPrompt = [
+        "You are an expert JavaScript assessment architect for the 'gasmine-puvvu🌸 2.8.0' testing framework (which uses standard describe, it, expect, toBe, toEqual, toContain, toMatch, toThrow syntax).",
+        modeInstruction,
+        "Given any user coding question, topic, or function list, generate a JSON object representing a structured JavaScript coding assessment.",
+        "Return ONLY valid raw JSON (no markdown code fences, no extra commentary) with this exact structure:",
+        "{",
+        '  "suiteTitle": "Descriptive Suite Title",',
+        '  "tasks": [',
+        "    {",
+        '      "name": "functionName",',
+        '      "params": "param1, param2",',
+        '      "desc": "concise description of what it returns",',
+        '      "concept": "core JS concept e.g. array filter, template literals, objects + spread",',
+        '      "immutable": false,',
+        '      "assertions": [',
+        '        "expect(functionName(\"Aisha\")).toBe(\"Hi, Aisha!\");",',
+        '        "expect(functionName(\"Ravi\")).toBe(\"Hi, Ravi!\");"',
+        "      ]",
+        "    }",
+        "  ]",
+        "}",
+        "Rules for assertions:",
+        "1. Every assertion string must be valid executable JavaScript using expect(...).toBe(...) or expect(...).toEqual(...).",
+        "2. Use .toBe() for primitives (numbers, strings, booleans) and .toEqual() for arrays or plain objects.",
+        "3. Do NOT write the implementation of the functions—only generate the specification tasks and assertions."
+      ].join("\n");
+
+      try {
+        var rawContent = "";
+
+        if (provider === "gemini") {
+          var geminiModel = model || "gemini-2.5-flash";
+          var geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/" +
+            encodeURIComponent(geminiModel) + ":generateContent?key=" + encodeURIComponent(apiKey);
+
+          var geminiRes = await fetch(geminiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              systemInstruction: { parts: [{ text: systemPrompt }] },
+              contents: [{
+                role: "user",
+                parts: [{ text: "Suite Title Hint: " + suiteTitle + "\nDifficulty Mode: " + state.difficultyMode.toUpperCase() + "\n\nCoding Question / Prompt:\n" + promptText }]
+              }],
+              generationConfig: {
+                temperature: 0.2,
+                responseMimeType: "application/json"
+              }
+            })
+          });
+
+          if (!geminiRes.ok) {
+            var gErr = await geminiRes.text();
+            throw new Error("Gemini HTTP " + geminiRes.status + ": " + gErr.slice(0, 180));
+          }
+          var gData = await geminiRes.json();
+          rawContent = (gData.candidates && gData.candidates[0] && gData.candidates[0].content &&
+            gData.candidates[0].content.parts && gData.candidates[0].content.parts[0] &&
+            gData.candidates[0].content.parts[0].text) || "";
+        } else {
+          var endpoint = provider === "groq"
+            ? "https://api.groq.com/openai/v1/chat/completions"
+            : "https://openrouter.ai/api/v1/chat/completions";
+
+          var response = await fetch(endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + apiKey
+            },
+            body: JSON.stringify({
+              model: model,
+              temperature: 0.2,
+              messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: "Suite Title Hint: " + suiteTitle + "\nDifficulty Mode: " + state.difficultyMode.toUpperCase() + "\n\nCoding Question / Prompt:\n" + promptText }
+              ]
+            })
+          });
+
+          if (!response.ok) {
+            var errText = await response.text();
+            throw new Error("HTTP " + response.status + ": " + errText.slice(0, 180));
+          }
+
+          var data = await response.json();
+          rawContent = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || "";
+        }
+
+        // Strip markdown ```json fences if present
+        var cleanedJson = rawContent
+          .replace(/^[\s\S]*?```(?:json)?\s*/i, "")
+          .replace(/\s*```[\s\S]*$/i, "")
+          .trim();
+        if (cleanedJson.indexOf("{") !== 0) {
+          var firstBrace = rawContent.indexOf("{");
+          var lastBrace = rawContent.lastIndexOf("}");
+          if (firstBrace !== -1 && lastBrace > firstBrace) {
+            cleanedJson = rawContent.slice(firstBrace, lastBrace + 1);
+          }
+        }
+
+        var parsedObj = JSON.parse(cleanedJson);
+        if (!parsedObj || !Array.isArray(parsedObj.tasks) || parsedObj.tasks.length === 0) {
+          throw new Error("AI response did not contain a valid tasks array.");
+        }
+
+        state.suiteTitle = parsedObj.suiteTitle || suiteTitle;
+        document.getElementById("suite-title-input").value = state.suiteTitle;
+
+        state.tasks = parsedObj.tasks.map(function (t, idx) {
+          var assertionsArr = Array.isArray(t.assertions) && t.assertions.length > 0
+            ? t.assertions
+            : ['expect(typeof ' + t.name + ').toBe("function");'];
+          return {
+            id: "ai_" + (idx + 1) + "_" + Date.now(),
+            name: String(t.name || ("fn" + (idx + 1))).trim(),
+            params: String(t.params || "").trim(),
+            desc: String(t.desc || "implements requested behavior").trim(),
+            concept: String(t.concept || "functions & logic").trim(),
+            marks: marksPerSpec,
+            done: false,
+            immutable: !!t.immutable,
+            baseAssertions: assertionsArr.slice(),
+            assertions: assertionsArr.slice()
+          };
+        });
+
+        syncGeneratedFiles(true);
+        runAndRenderGasminePuvvu();
+        statusEl.textContent = "AI Success: Generated " + state.tasks.length + " gasmine-puvvu🌸 specs (" + state.difficultyMode.toUpperCase() + " mode) via " + provider.toUpperCase() + "!";
+        showToast("Generated " + state.tasks.length + " specs via " + provider.toUpperCase() + "!");
+      } catch (err) {
+        statusEl.textContent = "AI Error (" + err.message + ") — Try checking your API key or model.";
+        showToast("AI Error: " + err.message);
+      } finally {
+        btnAi.disabled = false;
+        btnAi.innerHTML = originalBtnHtml;
+      }
+    }
+
+    /* =========================================================================
+     * SMART OFFLINE PROMPT PARSER (Fallback when no API key is used)
+     * ========================================================================= */
+    function parsePromptIntoTasks(rawText) {
+      var lines = rawText.split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean);
+      var extracted = [];
+      var idx = 1;
+
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        if (/^\|?\s*[-:]+\s*\|/.test(line)) continue;
+
+        var sigMatch = line.match(/`?([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\(([^)]*)\)`?/);
+        if (!sigMatch) continue;
+
+        var fnName = sigMatch[1];
+        if (fnName === "describe" || fnName === "it" || fnName === "expect" || fnName === "function") {
+          continue;
+        }
+        var params = sigMatch[2].trim();
+
+        var afterSig = line.slice(line.indexOf(sigMatch[0]) + sigMatch[0].length)
+          .replace(/^`?\s*(\||->|→|:|-|—)+\s*/, "")
+          .replace(/\|/g, " ")
+          .trim();
+
+        var desc = afterSig || ("correctly implements " + fnName + "(" + params + ")");
+        var isImmutable = /new\s+(array|object)|not\s+mutat|untouched|clone/i.test(line);
+        var concept = inferConcept(fnName, params, line);
+        var assertions = synthesizeAssertions(fnName, params, line, isImmutable);
+
+        extracted.push({
+          id: "custom_" + idx + "_" + Date.now(),
+          name: fnName,
+          params: params,
+          desc: desc,
+          concept: concept,
+          marks: 2,
+          done: false,
+          immutable: isImmutable,
+          assertions: assertions
+        });
+        idx++;
+      }
+
+      return extracted;
+    }
+
+    function inferConcept(fnName, params, line) {
+      var text = (fnName + " " + params + " " + line).toLowerCase();
+      if (text.indexOf("template") !== -1 || text.indexOf("greet") !== -1 || text.indexOf("format") !== -1) {
+        return "template literals";
+      }
+      if (text.indexOf("filter") !== -1 || text.indexOf("above") !== -1 || text.indexOf("high") !== -1) {
+        return "array filter (no mutation)";
+      }
+      if (text.indexOf("map") !== -1 || text.indexOf("titles") !== -1) {
+        return "array map + objects";
+      }
+      if (text.indexOf("toggle") !== -1 || text.indexOf("new object") !== -1 || text.indexOf("spread") !== -1) {
+        return "objects + spread";
+      }
+      if (text.indexOf("average") !== -1 || text.indexOf("empty") !== -1) {
+        return "edge-case handling";
+      }
+      if (text.indexOf("sum") !== -1 || text.indexOf("total") !== -1 || text.indexOf("count") !== -1) {
+        return "loops / reduce";
+      }
+      return "functions & logic";
+    }
+
+    function synthesizeAssertions(fnName, params, line, isImmutable) {
+      var allPresetKeys = Object.keys(PRESETS);
+      for (var k = 0; k < allPresetKeys.length; k++) {
+        var presetTasks = PRESETS[allPresetKeys[k]].tasks;
+        for (var j = 0; j < presetTasks.length; j++) {
+          if (presetTasks[j].name === fnName) {
+            return presetTasks[j].assertions.slice();
+          }
+        }
+      }
+
+      var exampleMatch = line.match(new RegExp(fnName + "\\s*\\(([^)]*)\\)\\s*(?:->|→|=+)\\s*([^|]+)"));
+      var assertions = [
+        'expect(typeof ' + fnName + ').toBe("function");'
+      ];
+
+      if (exampleMatch) {
+        var callArgs = exampleMatch[1].trim();
+        var expectedRaw = exampleMatch[2].trim().replace(/`+/g, "");
+        var matcher = /^(\[|\{)/.test(expectedRaw) ? "toEqual" : "toBe";
+        assertions.push("expect(" + fnName + "(" + callArgs + "))." + matcher + "(" + expectedRaw + ");");
+      } else {
+        var paramList = params ? params.split(",").map(function (p) { return p.trim(); }) : [];
+        if (paramList.length === 1 && /arr|list|scores|nums|items|tasks/i.test(paramList[0])) {
+          assertions.push("expect(" + fnName + "([])).toBeDefined();");
+        } else {
+          assertions.push("expect(" + fnName + "()).toBeDefined();");
+        }
+      }
+
+      if (isImmutable) {
+        assertions.push("var sampleInput = [];");
+        assertions.push(fnName + "(sampleInput);");
+        assertions.push("expect(sampleInput).toEqual([]);");
+      }
+
+      return assertions;
+    }
+
+    /* =========================================================================
+     * CODE GENERATORS (Rebranded to gasmine-puvvu🌸)
+     * ========================================================================= */
+    function generateFunctionsTestJs() {
+      var marksPerSpec = state.difficultyMode === "hard" ? 4 : 2;
+      var totalMarks = state.tasks.length * marksPerSpec;
+      var lines = [
+        "/*",
+        " * " + state.suiteTitle + " (gasmine-puvvu🌸 2.8.0)",
+        " * ------------------------------------------------------------------",
+        " * These " + state.tasks.length + " specs check the functions you implement in src/app.js.",
+        " * " + state.tasks.length + " specs x " + marksPerSpec + " marks = " + totalMarks + " (" + state.difficultyMode.toUpperCase() + " MODE).",
+        " *",
+        " * DO NOT EDIT THIS FILE. Make every spec turn green in gasmine-puvvu🌸.",
+        " * ------------------------------------------------------------------",
+        " */",
+        "",
+        'describe(' + JSON.stringify(state.suiteTitle) + ', function () {',
+        "",
+        "  function tasks() {",
+        "    return [",
+        '      { title: "Buy milk",        status: "todo", done: false, priority: "high" },',
+        '      { title: "Write the essay", status: "todo", done: false, priority: "low"  },',
+        '      { title: "Ship",            status: "done", done: true,  priority: "low"  }',
+        "    ];",
+        "  }",
+        ""
+      ];
+
+      for (var i = 0; i < state.tasks.length; i++) {
+        var t = state.tasks[i];
+        var num = i + 1;
+        var title = num + ". " + t.name + "(" + t.params + ") " + t.desc;
+        lines.push("  // " + num + " --------------------------------------------------------------");
+        lines.push("  it(" + JSON.stringify(title) + ", function () {");
+        for (var a = 0; a < t.assertions.length; a++) {
+          lines.push("    " + t.assertions[a]);
+        }
+        lines.push("  });");
+        lines.push("");
+      }
+
+      lines.push("});");
+      return lines.join("\n");
+    }
+
+    function generateStarterAppJs() {
+      var marksPerSpec = state.difficultyMode === "hard" ? 4 : 2;
+      var totalMarks = state.tasks.length * marksPerSpec;
+      var lines = [
+        "/*",
+        " * " + state.suiteTitle,
+        " * ------------------------------------------------------------------",
+        " * Implement the " + state.tasks.length + " functions below. Each one is checked by a",
+        " * gasmine-puvvu🌸 spec in tests/FunctionsTest.js (" + state.tasks.length + " specs x " + marksPerSpec + " marks = " + totalMarks + ").",
+        " *",
+        " * Rules:",
+        " *   - Do NOT rename the functions and do NOT change their parameters.",
+        " *   - Do NOT edit index.html, main.css, or tests/FunctionsTest.js.",
+        " *   - Keep each function pure: return a value, do not print or mutate",
+        " *     the inputs unless the task explicitly says to.",
+        " * ------------------------------------------------------------------",
+        " */",
+        ""
+      ];
+
+      for (var i = 0; i < state.tasks.length; i++) {
+        var t = state.tasks[i];
+        var num = i + 1;
+        lines.push("// " + num + ". " + t.name + "(" + t.params + ") -> " + t.desc);
+        lines.push("function " + t.name + "(" + t.params + ") {");
+        lines.push("  // Write your implementation using " + t.concept);
+        lines.push("}");
+        lines.push("");
+      }
+
+      return lines.join("\n");
+    }
+
+    function generateReadmeMd() {
+      var marksPerSpec = state.difficultyMode === "hard" ? 4 : 2;
+      var totalMarks = state.tasks.length * marksPerSpec;
+      var lines = [
+        "## Problem Statement",
+        "",
+        "Implement **" + state.tasks.length + " JavaScript functions** for **" + state.suiteTitle + "**. You write **no HTML**: all your code goes in `src/app.js`.",
+        "",
+        "`index.html` **is** a **gasmine-puvvu🌸 Spec Runner** — open it in a browser and it automatically runs the " + state.tasks.length + " tests against your functions. All " + state.tasks.length + " start **red**; make every one **green**.",
+        "",
+        "## Tasks — functions to implement in `src/app.js`",
+        "",
+        "| # | Status | Function | Must return |",
+        "|---|--------|----------|-------------|"
+      ];
+
+      for (var i = 0; i < state.tasks.length; i++) {
+        var t = state.tasks[i];
+        var check = t.done ? "[x]" : "[ ]";
+        lines.push("| " + (i + 1) + " | " + check + " | `" + t.name + "(" + t.params + ")` | " + t.desc + " |");
+      }
+
+      lines.push("");
+      lines.push("## gasmine-puvvu🌸 Test Cases & Grading Rubric (" + totalMarks + " Marks)");
+      lines.push("");
+      lines.push("| # | Test | Concept | Marks |");
+      lines.push("|---|------|---------|-------|");
+
+      for (var j = 0; j < state.tasks.length; j++) {
+        var tk = state.tasks[j];
+        lines.push("| " + (j + 1) + " | `" + tk.name + "` " + tk.desc + " | " + tk.concept + " | " + tk.marks + " |");
+      }
+
+      lines.push("");
+      lines.push("## Instructions");
+      lines.push("- Edit **only** `src/app.js`. Do not rename the functions or change their parameters.");
+      lines.push("- **Do not edit** `index.html`, `main.css`, or `tests/FunctionsTest.js`.");
+      lines.push("- Open `index.html` in your browser — it **is** the **gasmine-puvvu🌸 Spec Runner**.");
+      lines.push("- Keep each function **pure**: return a value and do not mutate inputs.");
+      return lines.join("\n");
+    }
+
+    function generateIndexHtml() {
+      return [
+        "<!DOCTYPE html>",
+        "<html>",
+        "<head>",
+        '  <meta charset="utf-8">',
+        "  <title>gasmine-puvvu🌸 Spec Runner v2.8.0 — " + state.suiteTitle + "</title>",
+        "",
+        '  <link rel="stylesheet" href="gasmine-puvvu/gasmine-puvvu-2.8.0/gasmine-puvvu.css">',
+        '  <link rel="stylesheet" href="main.css">',
+        "",
+        '  <script src="gasmine-puvvu/gasmine-puvvu-2.8.0/gasmine-puvvu.js"><\/script>',
+        '  <script src="gasmine-puvvu/gasmine-puvvu-2.8.0/gasmine-puvvu-html.js"><\/script>',
+        '  <script src="gasmine-puvvu/gasmine-puvvu-2.8.0/boot.js"><\/script>',
+        "",
+        "  <!-- your code -->",
+        '  <script src="src/app.js"><\/script>',
+        "",
+        "  <!-- the tests -->",
+        '  <script src="tests/FunctionsTest.js"><\/script>',
+        "</head>",
+        "<body>",
+        "  <!-- gasmine-puvvu🌸 2.8.0 Spec Runner mounts automatically on window.onload -->",
+        "</body>",
+        "</html>"
+      ].join("\n");
+    }
+
+    /* =========================================================================
+     * EMBEDDED gasmine-puvvu🌸 2.8.0 MINI-ENGINE FOR LIVE IN-APP EXECUTION
+     * ========================================================================= */
+    function deepEqual(a, b) {
+      if (a === b) return true;
+      if (a === null || b === null || typeof a !== "object" || typeof b !== "object") {
+        return false;
+      }
+      if (Array.isArray(a) !== Array.isArray(b)) return false;
+      var keysA = Object.keys(a);
+      var keysB = Object.keys(b);
+      if (keysA.length !== keysB.length) return false;
+      for (var i = 0; i < keysA.length; i++) {
+        var key = keysA[i];
+        if (!Object.prototype.hasOwnProperty.call(b, key) || !deepEqual(a[key], b[key])) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function prettyPrint(val) {
+      if (val === undefined) return "undefined";
+      if (typeof val === "function") return "Function";
+      try {
+        return JSON.stringify(val);
+      } catch (e) {
+        return String(val);
+      }
+    }
+
+    function executeLiveGasminePuvvuSpecs(studentCode, specCode) {
+      var startTime = performance.now();
+      var suites = [];
+      var currentSpecs = [];
+
+      function createExpectation(actual, isNot) {
+        function assert(cond, msg) {
+          var pass = isNot ? !cond : cond;
+          if (!pass) {
+            throw new Error(msg);
+          }
+        }
+        return {
+          toBe: function (expected) {
+            assert(
+              actual === expected,
+              "Expected " + prettyPrint(actual) + (isNot ? " not " : " ") + "to be " + prettyPrint(expected) + "."
+            );
+          },
+          toEqual: function (expected) {
+            assert(
+              deepEqual(actual, expected),
+              "Expected " + prettyPrint(actual) + (isNot ? " not " : " ") + "to equal " + prettyPrint(expected) + "."
+            );
+          },
+          toBeTruthy: function () {
+            assert(!!actual, "Expected " + prettyPrint(actual) + (isNot ? " not " : " ") + "to be truthy.");
+          },
+          toBeFalsy: function () {
+            assert(!actual, "Expected " + prettyPrint(actual) + (isNot ? " not " : " ") + "to be falsy.");
+          },
+          toBeDefined: function () {
+            assert(actual !== undefined, "Expected " + prettyPrint(actual) + (isNot ? " not " : " ") + "to be defined.");
+          },
+          toBeUndefined: function () {
+            assert(actual === undefined, "Expected " + prettyPrint(actual) + (isNot ? " not " : " ") + "to be undefined.");
+          },
+          toBeNull: function () {
+            assert(actual === null, "Expected " + prettyPrint(actual) + (isNot ? " not " : " ") + "to be null.");
+          },
+          toBeGreaterThan: function (expected) {
+            assert(actual > expected, "Expected " + prettyPrint(actual) + " to be greater than " + prettyPrint(expected) + ".");
+          },
+          toBeGreaterThanOrEqual: function (expected) {
+            assert(actual >= expected, "Expected " + prettyPrint(actual) + " to be >= " + prettyPrint(expected) + ".");
+          },
+          toBeLessThan: function (expected) {
+            assert(actual < expected, "Expected " + prettyPrint(actual) + " to be less than " + prettyPrint(expected) + ".");
+          },
+          toBeLessThanOrEqual: function (expected) {
+            assert(actual <= expected, "Expected " + prettyPrint(actual) + " to be <= " + prettyPrint(expected) + ".");
+          },
+          toBeCloseTo: function (expected, precision) {
+            var p = precision !== undefined ? precision : 2;
+            var pass = Math.abs(expected - actual) < Math.pow(10, -p) / 2;
+            assert(pass, "Expected " + prettyPrint(actual) + " to be close to " + prettyPrint(expected) + ".");
+          },
+          toContain: function (expected) {
+            var found = false;
+            if (typeof actual === "string") {
+              found = actual.indexOf(expected) !== -1;
+            } else if (Array.isArray(actual)) {
+              for (var i = 0; i < actual.length; i++) {
+                if (deepEqual(actual[i], expected)) {
+                  found = true;
+                  break;
+                }
+              }
+            }
+            assert(found, "Expected " + prettyPrint(actual) + " to contain " + prettyPrint(expected) + ".");
+          },
+          toMatch: function (regex) {
+            var re = regex instanceof RegExp ? regex : new RegExp(regex);
+            assert(re.test(actual), "Expected " + prettyPrint(actual) + " to match " + String(re) + ".");
+          },
+          toThrow: function () {
+            var threw = false;
+            try {
+              actual();
+            } catch (e) {
+              threw = true;
+            }
+            assert(threw, "Expected function " + (isNot ? "not " : "") + "to throw an exception.");
+          }
+        };
+      }
+
+      function expectFn(actual) {
+        var pos = createExpectation(actual, false);
+        pos.not = createExpectation(actual, true);
+        return pos;
+      }
+
+      function describeFn(title, fn) {
+        var suite = { title: title, specs: [] };
+        suites.push(suite);
+        var prevSpecs = currentSpecs;
+        currentSpecs = suite.specs;
+        try {
+          fn();
+        } finally {
+          currentSpecs = prevSpecs;
+        }
+      }
+
+      function itFn(title, fn) {
+        currentSpecs.push({ title: title, fn: fn });
+      }
+
+      var fnNames = state.tasks.map(function (t) { return t.name; });
+      var exportStatements = fnNames.map(function (name) {
+        return "if (typeof " + name + " !== 'undefined') { __sandboxExports." + name + " = " + name + "; }";
+      }).join("\n");
+
+      var combinedRunnerBody = [
+        "var __sandboxExports = {};",
+        studentCode,
+        exportStatements,
+        "with (__sandboxExports) {",
+        specCode,
+        "}"
+      ].join("\n");
+
+      var syntaxError = null;
+      try {
+        var runner = new Function("describe", "it", "expect", combinedRunnerBody);
+        runner(describeFn, itFn, expectFn);
+      } catch (err) {
+        syntaxError = err;
+      }
+
+      var results = [];
+      if (syntaxError) {
+        results.push({
+          title: "Syntax / Reference Error in src/app.js or FunctionsTest.js",
+          passed: false,
+          error: syntaxError.message || String(syntaxError)
+        });
+      } else {
+        for (var s = 0; s < suites.length; s++) {
+          var specs = suites[s].specs;
+          for (var i = 0; i < specs.length; i++) {
+            var sp = specs[i];
+            try {
+              sp.fn();
+              results.push({ title: sp.title, passed: true, error: null });
+            } catch (err) {
+              results.push({
+                title: sp.title,
+                passed: false,
+                error: err && err.message ? err.message : String(err)
+              });
+            }
+          }
+        }
+      }
+
+      var elapsedSec = ((performance.now() - startTime) / 1000).toFixed(3);
+      return {
+        results: results,
+        elapsedSec: elapsedSec
+      };
+    }
+
+    /* =========================================================================
+     * UI RENDERING & STATE SYNCHRONIZATION
+     * ========================================================================= */
+    function renderChecklist() {
+      var container = document.getElementById("checklist-container");
+      container.innerHTML = "";
+
+      var doneCount = 0;
+      for (var i = 0; i < state.tasks.length; i++) {
+        if (state.tasks[i].done) doneCount++;
+      }
+
+      var marksPerSpec = state.difficultyMode === "hard" ? 4 : 2;
+      var total = state.tasks.length;
+      var earnedMarks = doneCount * marksPerSpec;
+      var totalMarks = total * marksPerSpec;
+      var pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
+
+      document.getElementById("checklist-progress-badge").textContent =
+        doneCount + " / " + total + " Green (" + earnedMarks + " / " + totalMarks + " Marks)";
+      document.getElementById("checklist-progress-bar").style.width = pct + "%";
+
+      for (var idx = 0; idx < state.tasks.length; idx++) {
+        (function (index) {
+          var task = state.tasks[index];
+          var row = document.createElement("div");
+          row.className = "px-2 py-1.5 rounded border transition flex items-center justify-between gap-1.5 " +
+            (task.done
+              ? "bg-emerald-950/40 border-emerald-500/40"
+              : "bg-slate-900 border-slate-800");
+
+          var left = document.createElement("label");
+          left.className = "flex items-center gap-1.5 cursor-pointer flex-1 truncate";
+          left.title = task.name + "(" + task.params + ") — " + task.desc;
+
+          var checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.checked = !!task.done;
+          checkbox.className = "rounded bg-slate-950 border-slate-700 text-emerald-500 focus:ring-0";
+          checkbox.addEventListener("change", function () {
+            task.done = checkbox.checked;
+            renderChecklist();
+            syncGeneratedFiles(false);
+          });
+
+          var fnBadge = document.createElement("span");
+          fnBadge.className = "text-[11px] font-semibold mono truncate " + (task.done ? "line-through text-emerald-300" : "text-pink-300");
+          fnBadge.textContent = (index + 1) + ". " + task.name + "()";
+
+          left.appendChild(checkbox);
+          left.appendChild(fnBadge);
+
+          var delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className = "text-slate-500 hover:text-rose-400 text-[10px] px-1 rounded transition";
+          delBtn.title = "Remove spec";
+          delBtn.textContent = "✕";
+          delBtn.addEventListener("click", function () {
+            state.tasks.splice(index, 1);
+            renderChecklist();
+            syncGeneratedFiles(true);
+            runAndRenderGasminePuvvu();
+          });
+
+          row.appendChild(left);
+          row.appendChild(delBtn);
+          container.appendChild(row);
+        })(idx);
+      }
+    }
+
+    function syncGeneratedFiles(resetStarterEditor) {
+      var specsCode = generateFunctionsTestJs();
+      var starterApp = generateStarterAppJs();
+      var readmeMd = generateReadmeMd();
+      var indexHtml = generateIndexHtml();
+
+      document.getElementById("generated-specs-code").value = specsCode;
+      document.getElementById("generated-app-code").value = starterApp;
+      document.getElementById("generated-readme-code").value = readmeMd;
+      document.getElementById("generated-index-code").value = indexHtml;
+
+      if (resetStarterEditor) {
+        document.getElementById("live-code-editor").value = starterApp;
+      }
+    }
+
+    function runAndRenderGasminePuvvu() {
+      var studentCode = document.getElementById("live-code-editor").value;
+      var specCode = document.getElementById("generated-specs-code").value;
+
+      var outcome = executeLiveGasminePuvvuSpecs(studentCode, specCode);
+      var results = outcome.results;
+
+      document.getElementById("gasmine-duration-text").textContent = "finished in " + outcome.elapsedSec + "s";
+
+      var dotsBar = document.getElementById("gasmine-dots-bar");
+      var resultsList = document.getElementById("gasmine-results-list");
+      var statusBar = document.getElementById("gasmine-status-bar");
+      var scorePill = document.getElementById("runner-score-pill");
+
+      dotsBar.innerHTML = "";
+      resultsList.innerHTML = "";
+
+      var passCount = 0;
+      var failCount = 0;
+
+      for (var i = 0; i < results.length; i++) {
+        var r = results[i];
+        if (r.passed) {
+          passCount++;
+        } else {
+          failCount++;
+        }
+
+        if (state.tasks[i]) {
+          state.tasks[i].done = r.passed;
+        }
+
+        var dot = document.createElement("span");
+        dot.className = "inline-block font-bold text-sm leading-none " +
+          (r.passed ? "text-teal-700" : "text-orange-700");
+        dot.textContent = r.passed ? "🌸" : "×";
+        dot.title = r.title;
+        dotsBar.appendChild(dot);
+
+        var item = document.createElement("div");
+        if (r.passed) {
+          item.className = "py-1 px-2 rounded bg-teal-50 border border-teal-200 text-teal-900 flex items-center gap-2";
+          item.innerHTML = '<span class="font-bold text-teal-700">🌸</span><span>' + escapeHtml(r.title) + '</span>';
+        } else {
+          item.className = "p-2 rounded bg-red-50 border border-red-200 text-red-900";
+          item.innerHTML =
+            '<div class="font-semibold text-red-800 flex items-center gap-1.5"><span>✗</span><span>' +
+            escapeHtml(r.title) +
+            '</span></div>' +
+            '<div class="mt-1 pl-4 text-[11px] text-red-700 whitespace-pre-wrap">' +
+            escapeHtml(r.error) +
+            '</div>';
+        }
+        resultsList.appendChild(item);
+      }
+
+      var totalSpecs = results.length;
+      if (failCount === 0 && totalSpecs > 0) {
+        statusBar.className = "gasmine-sim-bar-passed";
+        statusBar.textContent = totalSpecs + (totalSpecs === 1 ? " spec" : " specs") + ", 0 failures — All Blooming in gasmine-puvvu🌸!";
+      } else {
+        statusBar.className = "gasmine-sim-bar-failed";
+        statusBar.textContent = totalSpecs + (totalSpecs === 1 ? " spec, " : " specs, ") + failCount + (failCount === 1 ? " failure" : " failures");
+      }
+
+      var marksPerSpec = state.difficultyMode === "hard" ? 4 : 2;
+      scorePill.textContent = "Score (" + state.difficultyMode.toUpperCase() + "): " + (passCount * marksPerSpec) + " / " + (totalSpecs * marksPerSpec);
+      renderChecklist();
+      document.getElementById("generated-readme-code").value = generateReadmeMd();
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function showToast(msg) {
+      var toast = document.getElementById("toast-banner");
+      toast.textContent = msg;
+      toast.classList.remove("opacity-0");
+      toast.classList.add("opacity-100");
+      setTimeout(function () {
+        toast.classList.remove("opacity-100");
+        toast.classList.add("opacity-0");
+      }, 2400);
+    }
+
+    function copyText(text, label) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () {
+            showToast("Copied " + label + " to clipboard!");
+          }).catch(function () {
+            fallbackCopy(text, label);
+          });
+        } else {
+          fallbackCopy(text, label);
+        }
+      } catch (e) {
+        fallbackCopy(text, label);
+      }
+    }
+
+    function fallbackCopy(text, label) {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        showToast("Copied " + label + " to clipboard!");
+      } catch (e) {
+        showToast("Press Ctrl+C to copy " + label);
+      }
+      document.body.removeChild(ta);
+    }
+
+    function downloadFile(filename, content) {
+      var blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("Downloaded " + filename);
+    }
+
+    function getActiveFileDetails() {
+      if (state.activeTab === "specs") {
+        return { name: "FunctionsTest.js", content: document.getElementById("generated-specs-code").value };
+      }
+      if (state.activeTab === "appjs") {
+        return { name: "app.js", content: document.getElementById("generated-app-code").value };
+      }
+      if (state.activeTab === "readme") {
+        return { name: "README.md", content: document.getElementById("generated-readme-code").value };
+      }
+      if (state.activeTab === "indexhtml") {
+        return { name: "index.html", content: document.getElementById("generated-index-code").value };
+      }
+      return { name: "app.js", content: document.getElementById("live-code-editor").value };
+    }
+
+    /* =========================================================================
+     * EVENT LISTENERS & INITIALIZATION
+     * ========================================================================= */
+    function applyDifficultyModeToTasks() {
+      var isHard = state.difficultyMode === "hard";
+      for (var i = 0; i < state.tasks.length; i++) {
+        var t = state.tasks[i];
+        t.marks = isHard ? 4 : 2;
+        if (!t.baseAssertions) {
+          t.baseAssertions = t.assertions.slice();
+        }
+        if (isHard) {
+          var hardExtra = ['expect(typeof ' + t.name + ').toBe("function");'];
+          if (t.name === "greet") {
+            hardExtra.push('expect(greet("")).toBe("Hi, ! Welcome back.");');
+          } else if (t.name === "isPassing") {
+            hardExtra.push("expect(isPassing(40.0)).toBe(true);");
+            hardExtra.push("expect(isPassing(-10)).toBe(false);");
+          } else if (t.name === "sumScores") {
+            hardExtra.push("expect(sumScores([-5, 5, 10])).toBe(10);");
+          } else if (t.name === "highScores") {
+            hardExtra.push("expect(highScores([40, 41], 40)).toEqual([41]);");
+          } else if (t.name === "averageScore") {
+            hardExtra.push("expect(averageScore([0, 0, 0])).toBe(0);");
+          }
+          t.assertions = t.baseAssertions.concat(hardExtra);
+        } else {
+          t.assertions = t.baseAssertions.slice();
+        }
+      }
+    }
+
+    function loadPreset(presetKey) {
+      var preset = PRESETS[presetKey] || PRESETS.task_tracker;
+      state.suiteTitle = preset.suiteTitle;
+      state.tasks = JSON.parse(JSON.stringify(preset.tasks));
+
+      document.getElementById("suite-title-input").value = state.suiteTitle;
+      document.getElementById("prompt-input").value = preset.promptText;
+
+      syncGeneratedFiles(true);
+
+      if ((presetKey === "task_tracker" || presetKey === "task_tracker_5") && preset.uploadedAppJs) {
+        document.getElementById("live-code-editor").value = preset.uploadedAppJs;
+      }
+      applyDifficultyModeToTasks();
+
+      runAndRenderGasminePuvvu();
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+      // Load saved API key / provider from localStorage safely
+      try {
+        var savedKey = localStorage.getItem("gasmine_puvvu_api_key");
+        var savedProvider = localStorage.getItem("gasmine_puvvu_provider");
+        var savedModel = localStorage.getItem("gasmine_puvvu_model");
+        if (savedKey) {
+          state.apiKey = savedKey;
+          document.getElementById("ai-api-key-input").value = savedKey;
+        }
+        if (savedProvider) {
+          state.provider = savedProvider;
+          document.getElementById("ai-provider-select").value = savedProvider;
+        }
+        if (savedModel) {
+          state.model = savedModel;
+          document.getElementById("ai-model-input").value = savedModel;
+        }
+      } catch (e) {}
+
+      // Toggle API drawer
+      document.getElementById("btn-toggle-api-drawer").addEventListener("click", function () {
+        var bar = document.getElementById("api-config-bar");
+        bar.classList.toggle("hidden");
+      });
+
+      // Provider switch updates default model
+      document.getElementById("ai-provider-select").addEventListener("change", function (e) {
+        var prov = e.target.value;
+        state.provider = prov;
+        var modelInput = document.getElementById("ai-model-input");
+        if (prov === "gemini") {
+          modelInput.value = "gemini-2.5-flash";
+        } else if (prov === "groq") {
+          modelInput.value = "llama-3.3-70b-versatile";
+        } else {
+          modelInput.value = "openai/gpt-4o-mini";
+        }
+      });
+
+      document.getElementById("btn-preset-gemini-model").addEventListener("click", function () {
+        document.getElementById("ai-provider-select").value = "gemini";
+        document.getElementById("ai-model-input").value = "gemini-2.5-flash";
+        showToast("Switched to Google Gemini (gemini-2.5-flash)");
+      });
+
+      document.getElementById("btn-preset-groq-model").addEventListener("click", function () {
+        document.getElementById("ai-provider-select").value = "groq";
+        document.getElementById("ai-model-input").value = "llama-3.3-70b-versatile";
+        showToast("Switched to Groq (llama-3.3-70b-versatile)");
+      });
+
+      document.getElementById("btn-preset-or-model").addEventListener("click", function () {
+        document.getElementById("ai-provider-select").value = "openrouter";
+        document.getElementById("ai-model-input").value = "openai/gpt-4o-mini";
+        showToast("Switched to OpenRouter (openai/gpt-4o-mini)");
+      });
+
+      document.getElementById("btn-save-key").addEventListener("click", function () {
+        var k = document.getElementById("ai-api-key-input").value.trim();
+        var p = document.getElementById("ai-provider-select").value;
+        var m = document.getElementById("ai-model-input").value.trim();
+        state.apiKey = k;
+        state.provider = p;
+        state.model = m;
+        try {
+          localStorage.setItem("gasmine_puvvu_api_key", k);
+          localStorage.setItem("gasmine_puvvu_provider", p);
+          localStorage.setItem("gasmine_puvvu_model", m);
+        } catch (e) {}
+        document.getElementById("ai-status-indicator").textContent =
+          k ? ("Saved " + p.toUpperCase() + " API Key (" + m + "). Ready to generate specs!") : "API key cleared.";
+        showToast(k ? "Saved API key for " + p.toUpperCase() + "!" : "Cleared API key");
+      });
+
+      // Tab switching helper so Run Specs can also switch the right pane to Spec Runner
+      var tabBtns = document.querySelectorAll(".tab-btn");
+      var tabPanels = {
+        runner: document.getElementById("tab-panel-runner"),
+        specs: document.getElementById("tab-panel-specs"),
+        appjs: document.getElementById("tab-panel-appjs"),
+        readme: document.getElementById("tab-panel-readme"),
+        indexhtml: document.getElementById("tab-panel-indexhtml")
+      };
+
+      function switchCompanionTab(targetTab) {
+        state.activeTab = targetTab;
+        for (var j = 0; j < tabBtns.length; j++) {
+          var btn = tabBtns[j];
+          if (btn.getAttribute("data-tab") === targetTab) {
+            btn.className = "tab-btn w-full text-left px-3 py-2 text-xs font-semibold rounded-lg border-l-2 border-pink-400 text-pink-300 bg-slate-900 transition flex items-center gap-2";
+          } else {
+            btn.className = "tab-btn w-full text-left px-3 py-2 text-xs font-semibold rounded-lg border-l-2 border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/50 transition mono";
+          }
+        }
+        var keys = Object.keys(tabPanels);
+        for (var k = 0; k < keys.length; k++) {
+          var key = keys[k];
+          if (key === targetTab) {
+            tabPanels[key].classList.remove("hidden");
+          } else {
+            tabPanels[key].classList.add("hidden");
+          }
+        }
+      }
+
+      for (var i = 0; i < tabBtns.length; i++) {
+        tabBtns[i].addEventListener("click", function (e) {
+          switchCompanionTab(e.currentTarget.getAttribute("data-tab"));
+        });
+      }
+
+      document.getElementById("btn-toggle-add-spec").addEventListener("click", function () {
+        document.getElementById("add-spec-drawer").classList.toggle("hidden");
+      });
+
+      // Preset selector
+      var presetSelect = document.getElementById("preset-select");
+      presetSelect.addEventListener("change", function () {
+        loadPreset(presetSelect.value);
+        showToast("Loaded preset: " + presetSelect.options[presetSelect.selectedIndex].text);
+      });
+
+      // AI Generate button
+      document.getElementById("btn-ai-generate").addEventListener("click", function () {
+        var raw = document.getElementById("prompt-input").value.trim();
+        var title = document.getElementById("suite-title-input").value.trim() || "gasmine-puvvu🌸 Code Assessment";
+        if (!raw) {
+          showToast("Type or paste a coding question first!");
+          return;
+        }
+        generateSpecsViaAI(raw, title);
+      });
+
+      // Offline Parse button
+      document.getElementById("btn-analyze").addEventListener("click", function () {
+        var raw = document.getElementById("prompt-input").value.trim();
+        var title = document.getElementById("suite-title-input").value.trim() || "gasmine-puvvu🌸 Code Assessment";
+        state.suiteTitle = title;
+
+        if (!raw) {
+          showToast("Please paste a problem statement or function list first.");
+          return;
+        }
+
+        var parsed = parsePromptIntoTasks(raw);
+        if (parsed.length === 0) {
+          showToast("No function signatures like fn(x) found — click '🌸 AI Generate Specs & Todos' to generate from plain English!");
+          return;
+        }
+
+        state.tasks = parsed;
+        syncGeneratedFiles(true);
+        runAndRenderGasminePuvvu();
+        showToast("Parsed " + parsed.length + " gasmine-puvvu🌸 specs!");
+      });
+
+      document.getElementById("btn-clear-prompt").addEventListener("click", function () {
+        document.getElementById("prompt-input").value = "";
+      });
+
+      // Add Custom Function Spec
+      document.getElementById("btn-add-spec").addEventListener("click", function () {
+        var sigInput = document.getElementById("new-fn-sig").value.trim();
+        var descInput = document.getElementById("new-fn-desc").value.trim();
+        var conceptInput = document.getElementById("new-fn-concept").value;
+        var sampleCall = document.getElementById("new-fn-call").value.trim();
+        var sampleExpect = document.getElementById("new-fn-expect").value.trim();
+        var isImm = document.getElementById("new-fn-immutable").checked;
+
+        if (!sigInput) {
+          showToast("Enter a function signature like double(n)");
+          return;
+        }
+
+        var match = sigInput.match(/^([a-zA-Z_$][a-zA-Z0-9_$]*)\s*(?:\(([^)]*)\))?/);
+        if (!match) {
+          showToast("Invalid function name.");
+          return;
+        }
+
+        var fnName = match[1];
+        var params = (match[2] || "").trim();
+        var assertions = [];
+
+        if (sampleCall && sampleExpect) {
+          var matcher = /^(\[|\{)/.test(sampleExpect) ? "toEqual" : "toBe";
+          assertions.push("expect(" + sampleCall + ")." + matcher + "(" + sampleExpect + ");");
+        } else {
+          assertions.push("expect(typeof " + fnName + ').toBe("function");');
+          assertions.push("expect(" + fnName + "()).toBeDefined();");
+        }
+
+        if (isImm) {
+          assertions.push("var inputRef = [];");
+          assertions.push(fnName + "(inputRef);");
+          assertions.push("expect(inputRef).toEqual([]);");
+        }
+
+        state.tasks.push({
+          id: "manual_" + Date.now(),
+          name: fnName,
+          params: params,
+          desc: descInput || ("implements " + fnName + "(" + params + ")"),
+          concept: conceptInput,
+          marks: 2,
+          done: false,
+          immutable: isImm,
+          assertions: assertions
+        });
+
+        document.getElementById("new-fn-sig").value = "";
+        document.getElementById("new-fn-desc").value = "";
+        document.getElementById("new-fn-call").value = "";
+        document.getElementById("new-fn-expect").value = "";
+        document.getElementById("new-fn-immutable").checked = false;
+
+        syncGeneratedFiles(false);
+        runAndRenderGasminePuvvu();
+        showToast("Added gasmine-puvvu🌸 spec for " + fnName + "()");
+      });
+
+      // Live Runner Controls (Clicking Run Specs opens Spec Runner side-by-side with Code Writer!)
+      document.getElementById("btn-run-specs").addEventListener("click", function () {
+        switchCompanionTab("runner");
+        runAndRenderGasminePuvvu();
+        showToast("Executed gasmine-puvvu🌸 specs — showing Runner side-by-side!");
+      });
+
+      document.getElementById("btn-load-uploaded-code").addEventListener("click", function () {
+        loadPreset("task_tracker");
+        showToast("Loaded your uploaded Task Tracker app.js!");
+      });
+
+      document.getElementById("btn-reset-starter").addEventListener("click", function () {
+        document.getElementById("live-code-editor").value = generateStarterAppJs();
+        runAndRenderGasminePuvvu();
+        showToast("Reset editor to clean starter stubs.");
+      });
+
+      document.getElementById("btn-apply-spec-edits").addEventListener("click", function () {
+        switchCompanionTab("runner");
+        runAndRenderGasminePuvvu();
+        showToast("Applied custom FunctionsTest.js edits & opened Spec Runner!");
+      });
+
+      // Copy & Download Current File
+      document.getElementById("btn-copy-active").addEventListener("click", function () {
+        var file = getActiveFileDetails();
+        copyText(file.content, file.name);
+      });
+
+      document.getElementById("btn-download-active").addEventListener("click", function () {
+        var file = getActiveFileDetails();
+        downloadFile(file.name, file.content);
+      });
+
+      // Normal / Hard Mode buttons
+      function setDifficultyMode(mode) {
+        state.difficultyMode = mode;
+        var btnNormal = document.getElementById("btn-mode-normal");
+        var btnHard = document.getElementById("btn-mode-hard");
+        var modePill = document.getElementById("active-mode-pill");
+        if (mode === "hard") {
+          btnHard.className = "px-2.5 py-1 text-xs font-semibold rounded-md bg-amber-600 text-white transition";
+          btnNormal.className = "px-2.5 py-1 text-xs font-semibold rounded-md text-slate-300 hover:text-white transition";
+          modePill.textContent = "HARD 🔥";
+          modePill.className = "text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30";
+        } else {
+          btnNormal.className = "px-2.5 py-1 text-xs font-semibold rounded-md bg-pink-600 text-white transition";
+          btnHard.className = "px-2.5 py-1 text-xs font-semibold rounded-md text-slate-300 hover:text-white transition";
+          modePill.textContent = "NORMAL";
+          modePill.className = "text-[10px] px-1.5 py-0.5 rounded bg-pink-500/20 text-pink-300 border border-pink-500/30";
+        }
+        applyDifficultyModeToTasks();
+        syncGeneratedFiles(false);
+        runAndRenderGasminePuvvu();
+        showToast("Switched to " + mode.toUpperCase() + " Mode!");
+      }
+
+      document.getElementById("btn-mode-normal").addEventListener("click", function () {
+        setDifficultyMode("normal");
+      });
+      document.getElementById("btn-mode-hard").addEventListener("click", function () {
+        setDifficultyMode("hard");
+      });
+
+      // Initialize with the user's Task Tracker assessment
+      loadPreset("task_tracker");
+    });
+  </script>
+</body>
+</html>
