@@ -25,12 +25,19 @@ Live Spec Runner Split View: Clicking ▶ Run gasmine-puvvu🌸 Specs automatica
 📁 Repository Structure
 
 ├── index.html                                      # Main gasmine-puvvu🌸 AI Spec Studio Web App
+
 ├── README.md                                       # Project documentation & deployment guide
+
 ├── src/
+
 │   └── app.js                                      # Student starter code template
+
 ├── tests/
+
 │   └── FunctionsTest.js                            # Automated gasmine-puvvu🌸 2.8.0 test specs
+
 └── gasmine-puvvu/
+
     └── gasmine-puvvu-2.8.0/
         ├── gasmine-puvvu.js                        # Core test execution engine & 24 matchers
         ├── gasmine-puvvu-html.js                   # Browser HTML reporter UI
