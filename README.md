@@ -32,14 +32,4 @@
         └── console.js                              # CLI / console reporter
 ```
 
-## 🚀 How to Deploy on GitHub Pages
-
-1. Create a new **Public** repository on GitHub (e.g., `gasmine-puvvu-studio`).
-2. Upload `index.html` (or extract the full `gasmine-puvvu-github-deploy.zip` package) to the root of your repository and commit to the `main` branch.
-3. Open your repository on GitHub and go to **Settings → Pages**.
-4. Under **Build and deployment**, set **Source** to **Deploy from a branch**, select **`main`** and **`/ (root)`**, and click **Save**.
-5. Wait ~60 seconds—your app will be live at `https://<your-github-username>.github.io/<repository-name>/`.
-
-## 🔐 API Key Privacy
-
-API keys entered into the **⚙ AI API Keys** bar are stored only inside each visitor's own browser `localStorage` and are sent directly from their browser to Gemini, Groq, or OpenRouter. Never hardcode personal API keys inside `index.html` before pushing to a public repository.
+## 🚀 
